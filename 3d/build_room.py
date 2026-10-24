@@ -15,9 +15,9 @@ D = 10.0
 H = 4.5
 T = 0.4
 WIN_W = 4.0
-WIN_H = 3.3
-WIN_RISE = 1.7
-SILL = 0.95
+WIN_H = 3.0
+WIN_RISE = 1.55
+SILL = 1.0
 WIN_X = (-2.9, 2.9)
 COL_X = (-3.2, 3.2)
 COL_Y = -2.4
@@ -356,9 +356,10 @@ def build_room(coll, M):
     mesh_object("WallClock", bm, coll, [M["metal_dark"]])
 
     bm = bmesh.new()
-    for i in range(20):
-        lx = random.uniform(X0 + 1.2, X1 - 1.2)
-        ly = random.uniform(Y0 + 1.5, Y1 - 1.2)
+    cells = [(i, j) for i in range(7) for j in range(5)][1:-1]
+    for i, j in cells:
+        lx = X0 + 1.0 + (W - 2.0) * (i + 0.5) / 7 + random.uniform(-0.35, 0.35)
+        ly = Y0 + 1.4 + (D - 2.4) * (j + 0.5) / 5 + random.uniform(-0.3, 0.3)
         a = random.uniform(0, math.pi)
         tbm = bmesh.new()
         bmesh.ops.create_cube(tbm, size=1.0)
