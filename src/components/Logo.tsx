@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { ARCH, ARCH_STROKE, DIGITS, MARK_VIEWBOX, WORDMARK, WORDMARK_VIEWBOX } from './logo-paths'
 
 // Знак-арка: на hover контур «обегает» арку, цифры подпрыгивают (H1). Анимации — в index.css (.logo-*).
@@ -22,8 +23,15 @@ export function Wordmark({ className = '' }: { className?: string }) {
 
 /** Знак + надпись. play — проиграть hover-анимацию один раз (для тач-устройств после прелоадера). */
 export function Logo({ className = '', play = false }: { className?: string; play?: boolean }) {
+  // Класс снимаем после проигрыша: пока он висит, та же CSS-анимация на hover не перезапускается
+  const [played, setPlayed] = useState(false)
+  const playing = play && !played
+
   return (
-    <span className={`logo inline-flex items-center gap-2.5 ${play ? 'logo-play' : ''} ${className}`}>
+    <span
+      className={`logo inline-flex items-center gap-2.5 ${playing ? 'logo-play' : ''} ${className}`}
+      onAnimationEnd={(e) => e.animationName === 'logo-hop' && setPlayed(true)}
+    >
       <LogoMark className="h-9 w-auto" />
       <Wordmark className="h-4 w-auto" />
       <span className="sr-only">АРКА 123</span>
