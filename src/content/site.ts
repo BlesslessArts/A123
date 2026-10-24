@@ -15,11 +15,14 @@ export const site = {
     { id: 'reviews', label: 'Отзывы' },
     { id: 'contacts', label: 'Контакты' },
   ],
-  facts: [
-    { value: '123 м²', label: 'площадь зала' },
-    { value: '4×3,5 м', label: 'арочные окна' },
-    { value: 'до 60', label: 'гостей' },
+  // Цифры для блока Stats: досчитываются от 0 до value
+  stats: [
+    { value: 123, suffix: ' м²', label: 'площадь зала' },
+    { value: 4, suffix: ' × 3,5 м', label: 'арочные окна' },
+    { value: 4.5, decimals: 1, suffix: ' м', label: 'высота потолков' },
+    { value: 60, prefix: 'до ', label: 'гостей' },
   ],
+  formats: ['Мастер-классы', 'Лекции', 'Семинары', 'Воркшопы', 'Презентации', 'Фото- и видеосъёмки', 'Камерные события'],
   layouts: [
     { id: 'empty', label: 'Пустой зал' },
     { id: 'lecture', label: 'Лекция с проектором' },

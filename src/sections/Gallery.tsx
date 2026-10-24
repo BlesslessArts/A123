@@ -1,7 +1,9 @@
 import { AnimatePresence, motion } from 'motion/react'
 import { useCallback, useEffect, useState } from 'react'
+import { ArchReveal } from '../components/ArchReveal'
 import { Section } from '../components/Section'
 import { galleryGroups, photoUrl } from '../content/gallery'
+import { lockScroll } from '../lib/smooth-scroll'
 
 // Сколько фото показывать до «Показать все», чтобы блок не растягивался на несколько экранов
 const PREVIEW_COUNT = 6
@@ -24,10 +26,10 @@ export function Gallery() {
       if (e.key === 'ArrowRight') step(1)
       if (e.key === 'ArrowLeft') step(-1)
     }
-    document.body.style.overflow = 'hidden'
+    lockScroll(true)
     window.addEventListener('keydown', onKey)
     return () => {
-      document.body.style.overflow = ''
+      lockScroll(false)
       window.removeEventListener('keydown', onKey)
     }
   }, [open, step])
@@ -53,16 +55,18 @@ export function Gallery() {
           <button
             key={p.id}
             onClick={() => setOpen(i)}
-            className="group mb-4 block w-full overflow-hidden rounded-xl bg-navy-soft"
+            className="group mb-4 block w-full"
           >
-            <img
-              src={photoUrl(p.id, true)}
-              alt={p.alt}
-              width={p.portrait ? 405 : 720}
-              height={p.portrait ? 720 : 405}
-              loading="lazy"
-              className="h-auto w-full transition-transform duration-700 group-hover:scale-105"
-            />
+            <ArchReveal delay={(i % 3) * 0.1} className="bg-navy-soft">
+              <img
+                src={photoUrl(p.id, true)}
+                alt={p.alt}
+                width={p.portrait ? 405 : 720}
+                height={p.portrait ? 720 : 405}
+                loading="lazy"
+                className="h-auto w-full transition-transform duration-700 group-hover:scale-105"
+              />
+            </ArchReveal>
           </button>
         ))}
       </div>

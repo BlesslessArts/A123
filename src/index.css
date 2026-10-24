@@ -14,10 +14,6 @@
   --font-display: 'Onest Variable', system-ui, sans-serif;
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
 body {
   @apply bg-night text-plaster font-sans antialiased;
 }
@@ -55,7 +51,20 @@ h3 {
   }
 }
 
+/* Бегущая строка (E7): две одинаковые копии, сдвигаем на половину */
+.marquee {
+  animation: marquee 40s linear infinite;
+}
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .marquee {
+    animation: none;
+  }
   .logo-arch,
   .logo-digit {
     animation: none !important;
