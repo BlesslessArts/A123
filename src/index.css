@@ -28,7 +28,8 @@ h3 {
   @apply font-display font-bold tracking-tight;
 }
 
-/* Hover логотипа (H1): контур обегает арку, цифры подпрыгивают */
+/* Hover логотипа (H1): контур обегает арку, цифры подпрыгивают.
+   Класс logo-play ставит Logo при каждом наведении и снимает по окончании */
 .logo-arch {
   stroke-dasharray: 1 1;
   stroke-dashoffset: 0;
@@ -36,17 +37,12 @@ h3 {
 .logo-digit {
   transform-box: fill-box;
   transform-origin: 50% 100%;
-  transition: transform 0.5s cubic-bezier(0.3, 1.4, 0.5, 1);
 }
-.logo:hover .logo-arch,
 .logo-play .logo-arch {
   animation: logo-chase 1.1s cubic-bezier(0.65, 0, 0.35, 1);
 }
-.logo:hover .logo-digit {
-  transform: translateY(-6%);
-}
 .logo-play .logo-digit {
-  animation: logo-hop 0.9s 0.55s cubic-bezier(0.3, 1.4, 0.5, 1) both;
+  animation: logo-hop 0.6s cubic-bezier(0.3, 1.4, 0.5, 1) both;
 }
 @keyframes logo-chase {
   to {
