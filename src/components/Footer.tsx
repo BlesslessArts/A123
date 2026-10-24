@@ -5,11 +5,11 @@ const year = new Date().getFullYear()
 
 export function Footer() {
   return (
-    <footer id="contacts" className="bg-graphite px-4 py-16 text-stone sm:px-8">
+    <footer id="contacts" className="bg-navy px-4 py-16 sm:px-8">
       <div className="mx-auto grid max-w-6xl gap-10 sm:grid-cols-3">
         <div>
           <Logo />
-          <p className="mt-4 font-display text-lg italic">{site.slogan}</p>
+          <p className="mt-4 text-lg text-plaster/80">{site.slogan}</p>
         </div>
         <div className="space-y-1 text-sm">
           <p>{site.address}</p>

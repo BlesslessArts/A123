@@ -8,7 +8,7 @@ export function Pricing() {
         {site.plans.map((p) => (
           <article
             key={p.title}
-            className={`rounded-2xl p-8 ${'featured' in p && p.featured ? 'bg-stone text-graphite' : 'border border-stone/20'}`}
+            className={`rounded-2xl p-8 ${'featured' in p && p.featured ? 'bg-sunset text-night' : 'border border-plaster/15'}`}
           >
             <h3 className="text-2xl">{p.title}</h3>
             <p className="mt-4 font-display text-4xl">{p.price}</p>

@@ -14,14 +14,14 @@ export function Space() {
             key={l.id}
             onClick={() => setLayout(l.id)}
             className={`rounded-full border px-4 py-2 text-sm ${
-              layout === l.id ? 'border-stone bg-stone text-graphite' : 'border-stone/40 hover:border-stone'
+              layout === l.id ? 'border-sunset bg-sunset text-night' : 'border-plaster/30 hover:border-plaster'
             }`}
           >
             {l.label}
           </button>
         ))}
       </div>
-      <div className="grid aspect-video place-items-center rounded-2xl bg-graphite-soft text-stone/60">
+      <div className="grid aspect-video place-items-center rounded-2xl bg-navy-soft text-plaster/60">
         3D-демо: {site.layouts.find((l) => l.id === layout)?.label}
       </div>
     </Section>

@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Footer } from './components/Footer'
 import { Header } from './components/Header'
 import { Preloader } from './components/Preloader'
@@ -10,12 +11,15 @@ import { Services } from './sections/Services'
 import { Space } from './sections/Space'
 
 export default function App() {
+  // ready — прелоадер распахнул окно (или не показывался): запускаем появление первого экрана
+  const [ready, setReady] = useState(false)
+
   return (
     <>
-      <Preloader />
-      <Header />
+      <Preloader onDone={() => setReady(true)} />
+      <Header ready={ready} />
       <main>
-        <Hero />
+        <Hero ready={ready} />
         <About />
         <Space />
         <Services />

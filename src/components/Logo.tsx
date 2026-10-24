@@ -1,17 +1,32 @@
-// Временный логотип-арка. Заменим на SVG из фирменных материалов и анимируем (лоадер + hover).
-export function Logo({ className = '' }: { className?: string }) {
+import { ARCH, ARCH_STROKE, DIGITS, MARK_VIEWBOX, WORDMARK, WORDMARK_VIEWBOX } from './logo-paths'
+
+// Знак-арка: на hover контур «обегает» арку, цифры подпрыгивают (H1). Анимации — в index.css (.logo-*).
+export function LogoMark({ className = '' }: { className?: string }) {
   return (
-    <span className={`group inline-flex items-center gap-2 ${className}`}>
-      <svg viewBox="0 0 32 32" className="h-8 w-8" aria-hidden>
-        <path
-          d="M6 28V14a10 10 0 0 1 20 0v14"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          className="transition-[stroke-dashoffset] duration-700 [stroke-dasharray:80] group-hover:[stroke-dashoffset:80]"
-        />
-      </svg>
-      <span className="font-display text-xl tracking-wide">АРКА 123</span>
+    <svg viewBox={MARK_VIEWBOX} className={className} aria-hidden>
+      <path className="logo-arch" d={ARCH} pathLength={1} fill="none" stroke="currentColor" strokeWidth={ARCH_STROKE} />
+      {DIGITS.map((d, i) => (
+        <path key={i} className="logo-digit" d={d} fill="currentColor" style={{ transitionDelay: `${550 + i * 70}ms` }} />
+      ))}
+    </svg>
+  )
+}
+
+export function Wordmark({ className = '' }: { className?: string }) {
+  return (
+    <svg viewBox={WORDMARK_VIEWBOX} className={className} aria-hidden>
+      <path d={WORDMARK} fill="currentColor" fillRule="evenodd" />
+    </svg>
+  )
+}
+
+/** Знак + надпись. play — проиграть hover-анимацию один раз (для тач-устройств после прелоадера). */
+export function Logo({ className = '', play = false }: { className?: string; play?: boolean }) {
+  return (
+    <span className={`logo inline-flex items-center gap-2.5 ${play ? 'logo-play' : ''} ${className}`}>
+      <LogoMark className="h-9 w-auto" />
+      <Wordmark className="h-4 w-auto" />
+      <span className="sr-only">АРКА 123</span>
     </span>
   )
 }
