@@ -10,20 +10,22 @@ ROOT = os.path.dirname(os.path.abspath(__file__)) if "__file__" in globals() els
 TEX = os.path.join(ROOT, "textures")
 OUT_GLB = os.path.join(ROOT, "..", "public", "models", "arka123.glb")
 
-W = 11.8
-D = 10.4
+W = 11.0
+D = 11.2
 H = 4.5
 T = 0.4
 WIN_W = 4.0
 WIN_H = 3.0
-WIN_RISE = 1.55
+WIN_RISE = 1.4
 SILL = 1.0
-WIN_U = (D / 2 - 2.375, D / 2 + 2.375)
-COL_C = (5.9, D / 2)
-KITCHEN = (6.2, 8.4, 0.65)
+WIN_EDGE = 1.05
+WIN_U = (WIN_EDGE + WIN_W / 2, D - WIN_EDGE - WIN_W / 2)
+COL_C = (6.0, D / 2)
+KITCHEN = (6.3, 8.5, 0.65)
+SOUTH_COL = (2.8, 4.0)
 CLOCK_X = 3.0
 GLASS_Y = (0.0, D - 1.4)
-WHITE_COL_Y = 4.6
+WHITE_COL_Y = 4.9
 ORIGIN = Vector((-W / 2, -D / 2, 0))
 
 random.seed(123)
@@ -88,7 +90,7 @@ def materials():
         graphite=material("Column_Graphite", color=(0.085, 0.09, 0.098), rough=0.7),
         kitchen=material("Kitchen_Graphite", color=(0.07, 0.074, 0.08), rough=0.45),
         metal_dark=material("Metal_Black", color=(0.02, 0.02, 0.022), rough=0.45, metal=0.6),
-        pipe=material("Pipe_Grey", color=(0.32, 0.33, 0.34), rough=0.5, metal=0.5),
+        pipe=material("Pipe_Grey", color=(0.13, 0.135, 0.14), rough=0.55, metal=0.4),
         frame=material("Window_Frame", color=(0.03, 0.032, 0.035), rough=0.4, metal=0.3),
         glass=material("Window_Glass", color=(0.75, 0.82, 0.85), rough=0.05, alpha=0.1),
         glass_part=material("Partition_Glass", color=(0.86, 0.9, 0.92), rough=0.1, alpha=0.18),
@@ -260,19 +262,17 @@ def build_window_wall(coll, M):
 
     bm = bmesh.new()
     gbm = bmesh.new()
-    ft = 0.07
+    ft = 0.09
     fd0, fd1 = 0.12, 0.2
     for cu in WIN_U:
         inner = arch_profile(WIN_W, WIN_H, WIN_RISE, inset=ft)
         ring_prism(bm, arch_profile(WIN_W, WIN_H, WIN_RISE), inner, cu, SILL, fd0, fd1)
-        tz = SILL + 1.25
-        add_box(bm, cu - WIN_W / 2, cu + WIN_W / 2, fd0, fd1, tz, tz + 0.06)
         spring = SILL + WIN_H - WIN_RISE
-        for mx in (-0.95, 0.95):
-            add_box(bm, cu + mx - 0.03, cu + mx + 0.03, fd0, fd1, SILL, SILL + arch_height(mx, WIN_W, WIN_H, WIN_RISE, ft) - 0.01)
-        add_box(bm, cu - WIN_W / 2, cu - 0.95, fd0, fd1, spring - 0.03, spring + 0.03)
-        add_box(bm, cu + 0.95, cu + WIN_W / 2, fd0, fd1, spring - 0.03, spring + 0.03)
-        add_box(bm, cu - 1.88, cu - 1.84, fd0 - 0.03, fd0, SILL + 0.1, SILL + 1.15)
+        add_box(bm, cu - WIN_W / 2, cu + WIN_W / 2, fd0, fd1, spring - 0.04, spring + 0.04)
+        for mx in (-0.9, 0.9):
+            add_box(bm, cu + mx - 0.04, cu + mx + 0.04, fd0, fd1, SILL, SILL + arch_height(mx, WIN_W, WIN_H, WIN_RISE, ft) - 0.01)
+        for sx in (-1, 1):
+            add_box(bm, cu + sx * 1.4 - 0.025, cu + sx * 1.4 + 0.025, fd0 - 0.02, fd0, SILL + ft, spring - 0.04)
         gbm.faces.new([gbm.verts.new((cu + x, 0.16, SILL + z)) for x, z in inner])
     mesh_object("WindowFrames", bm, coll, [M["frame"]], WEST)
     mesh_object("WindowGlass", gbm, coll, [M["glass"]], WEST)
@@ -287,6 +287,12 @@ def build_window_wall(coll, M):
         for sx in (-0.85, 0.85):
             add_box(bm, cu + sx - 0.012, cu + sx + 0.012, -0.12, -0.1, 0.0, 0.16, 1)
     mesh_object("Radiators", bm, coll, [M["metal_dark"], M["alu"]], WEST)
+
+    bm = bmesh.new()
+    gap0, gap1 = WIN_U[0] + WIN_W / 2 + 0.06, WIN_U[1] - WIN_W / 2 - 0.06
+    add_box(bm, gap0, gap1, -0.1, 0, 0, H)
+    pil = mesh_object("Pilaster", bm, coll, [M["plaster"]], WEST)
+    box_uv(pil, 2.0)
 
 
 def build_walls(coll, M):
@@ -394,7 +400,7 @@ def build_structure(coll, M):
     bm = bmesh.new()
     add_box(bm, cx - 0.3, cx + 0.3, cy - 0.3, cy + 0.3, 0, H)
     add_box(bm, kx0 - 0.6, kx0, D - 0.35, D, 0, H)
-    add_box(bm, 1.4, 2.6, 0, 0.6, 0, H)
+    add_box(bm, SOUTH_COL[0], SOUTH_COL[1], 0, 0.6, 0, H)
     mesh_object("Columns", bm, coll, [M["graphite"]])
 
     bm = bmesh.new()
@@ -405,7 +411,7 @@ def build_structure(coll, M):
     add_box(bm, 0, W, D - 0.4, D, H - 0.55, H)
     add_box(bm, 0, 0.5, 0, D, H - 0.55, H)
     add_box(bm, W - 0.45, W, 0, D, H - 0.55, H)
-    add_box(bm, 1.4, 2.6, 0, cy - 0.28, H - 0.62, H)
+    add_box(bm, SOUTH_COL[0] + 0.3, SOUTH_COL[1] - 0.3, 0, cy - 0.28, H - 0.62, H)
     for y in (cy / 2, cy + (D - cy) / 2):
         add_box(bm, 0.5, W - 0.45, y - 0.13, y + 0.13, H - 0.32, H)
     for x in (cx / 2, cx + (W - cx) / 2):
@@ -553,15 +559,16 @@ def preview_rig(coll):
 
 
 VIEWS = {
-    "entrance": ((W - 1.0, 0.9, 1.55), (88, 0, 52)),
-    "along_clock_wall": ((0.9, 6.0, 1.5), (88, 0, -84)),
-    "windows": ((8.8, D / 2 + 1.7, 1.6), (88, 0, 98)),
+    "photo00_windows": ((4.6, 4.6, 1.45), (90, 0, 90), 14),
+    "photo01_clock_wall": ((0.8, 2.6, 1.5), (90, 0, -78), 13),
+    "photo02_entrance": ((W - 1.0, 1.0, 1.6), (89, 0, 36), 13),
 }
 
 
 def set_view(name):
-    loc, rot = VIEWS[name]
+    loc, rot, lens = VIEWS[name]
     c = bpy.context.scene.camera
+    c.data.lens = lens
     c.location = ORIGIN + Vector(loc)
     c.rotation_euler = tuple(math.radians(v) for v in rot)
 
@@ -615,7 +622,7 @@ def build():
             ob.parent = root
     root.location = ORIGIN
     preview_rig(collection("Preview"))
-    set_view("entrance")
+    set_view("photo02_entrance")
     return len(room.objects)
 
 

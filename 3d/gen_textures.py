@@ -62,7 +62,7 @@ def herringbone(size=1024, L=5):
     grain_seed = (plank_id % 997).astype(np.float32)
     grain = np.sin((across * 9.0 + np.sin(along * 6.0 + grain_seed) * 0.6 + grain_seed) * 6.2831) * 0.5 + 0.5
     fine = tileable_noise(size, 6, 7)
-    base = np.array([0.78, 0.60, 0.42], np.float32)
+    base = np.array([0.82, 0.56, 0.30], np.float32)
     col = base[None, None, :] * (1.0 + 0.07 * t[..., None])
     col *= (0.92 + 0.10 * grain[..., None]) * (0.96 + 0.08 * fine[..., None])
     edge_a = np.minimum(across, 1 - across) * px
